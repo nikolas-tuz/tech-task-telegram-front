@@ -8,13 +8,13 @@ type NavigationType = {
 
 import NavContainer from '@/components/UI/NavContainer';
 import LogoIcon from '@/components/Icons/LogoIcon';
-import Image from 'next/image';
 import DivContainer from '@/components/UI/DivContainer';
 import { useState } from 'react';
 import { TelegramUserType } from '@/utils/types/TelegramUser.type';
 import LoginIcon from '@/components/Icons/LoginIcon';
 import { useUserData } from '@/hooks/useUserData';
 import { Tooltip } from '@mui/material';
+import UserImage from '@/components/UI/UserImage';
 
 export default function Navigation(/*{}: NavigationType*/) {
   const { status } = useUserData();
@@ -35,11 +35,7 @@ export default function Navigation(/*{}: NavigationType*/) {
           <LogoIcon className={`m-auto`} />
         </DivContainer>
         <DivContainer>
-          {telegramUser && telegramUser?.photo_url ? (
-            <Image className={`rounded-full`} width={32} height={32} src={``} alt={`User Image`} />
-          ) : (
-            <DivContainer className={`w-12 h-12 bg-[#27AE60] rounded-full`}></DivContainer>
-          )}
+          <UserImage userImage={telegramUser?.photo_url} />
         </DivContainer>
       </DivContainer>
       <DivContainer className={`flex flex-col gap-4`}>

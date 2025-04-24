@@ -12,7 +12,7 @@ import { useState } from 'react';
 import ConnectToTelegram from '@/components/Layouts/Dashboard/Auth/ConnectToTelegram';
 import LoginOntoSystem from '@/components/Layouts/Dashboard/Auth/LoginOntoSystem';
 import RegisterOntoSystem from '@/components/Layouts/Dashboard/Auth/RegisterOntoSystem';
-import Chats from '@/components/Layouts/Dashboard/Chats';
+import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
 
 export type AuthStateType = `login` | `register` | `telegram` | `telegram-authorized`;
 
