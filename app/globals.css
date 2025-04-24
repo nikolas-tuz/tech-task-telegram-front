@@ -30,7 +30,7 @@ body {
 }
 
 .main-grid-container {
-    grid-template-columns: 54px 337px 1fr;
+    grid-template-columns: 337px 1fr;
     @apply grid gap-4
 }
 

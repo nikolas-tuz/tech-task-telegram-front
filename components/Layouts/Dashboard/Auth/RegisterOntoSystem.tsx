@@ -1,6 +1,6 @@
 // 'use client';
 
-import { AuthStateType } from '@/components/Dashboard/Dashboard';
+import { AuthStateType } from '@/components/Pages/Home/Auth';
 import DivContainer from '@/components/UI/DivContainer';
 import LogoIcon from '@/components/Icons/LogoIcon';
 import TextNeutral from '@/components/Typography/Text/TextNeutral';
