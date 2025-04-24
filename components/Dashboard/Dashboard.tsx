@@ -14,7 +14,7 @@ import LoginOntoSystem from '@/components/Layouts/Dashboard/Auth/LoginOntoSystem
 import RegisterOntoSystem from '@/components/Layouts/Dashboard/Auth/RegisterOntoSystem';
 import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
 
-export type AuthStateType = `login` | `register` | `telegram` | `telegram-authorized` | `chat-opened`;
+export type AuthStateType = `login` | `register` | `telegram` | `telegram-authorized`;
 
 export default function Dashboard(/*{}: DashboardType*/) {
   const [authState, setAuthState] = useState<AuthStateType>(`telegram-authorized`);
