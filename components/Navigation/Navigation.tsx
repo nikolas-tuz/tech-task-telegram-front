@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { TelegramUserType } from '@/utils/types/TelegramUser.type';
 import LoginIcon from '@/components/Icons/LoginIcon';
 import { useUserData } from '@/hooks/useUserData';
+import { Tooltip } from '@mui/material';
 
 export default function Navigation(/*{}: NavigationType*/) {
   const { status } = useUserData();
@@ -43,10 +44,14 @@ export default function Navigation(/*{}: NavigationType*/) {
       </DivContainer>
       <DivContainer className={`flex flex-col gap-4`}>
         {telegramUser && (<DivContainer className={`cursor-pointer`}>
-          <LoginIcon color={`blue`} className={`w-5 h-5 transition-all duration-200 hover:scale-105`} />
+          <Tooltip followCursor title={`Click to log out from telegram`}>
+            <LoginIcon color={`blue`} className={`w-5 h-5 transition-all duration-200 hover:scale-105`} />
+          </Tooltip>
         </DivContainer>)}
         {status && (<DivContainer className={`cursor-pointer`}>
-          <LoginIcon color={`green`} className={`w-5 h-5 transition-all duration-200 hover:scale-105`} />
+          <Tooltip followCursor title={`Click to log out from the app.`}>
+            <LoginIcon color={`green`} className={`w-5 h-5 transition-all duration-200 hover:scale-105`} />
+          </Tooltip>
         </DivContainer>)}
       </DivContainer>
 
