@@ -11,7 +11,7 @@ import TextNeutral from '@/components/Typography/Text/TextNeutral';
 import LinkGray from '@/components/Links/LinkGray';
 import { LINKS } from '@/utils/links/links';
 
-export default function Content(/*{}: ContentType*/) {
+export default function InitialContent(/*{}: ContentType*/) {
   const { myLinkedin, neuroTrackURL, figmaDesignURL } = LINKS;
   return (
     <DivContainer className={`flex items-center justify-center h-screen`}>

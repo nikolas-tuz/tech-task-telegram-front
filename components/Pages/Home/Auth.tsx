@@ -11,7 +11,6 @@ import MainHeading from '@/components/Typography/Heading/MainHeading';
 import { useState } from 'react';
 import LoginOntoSystem from '@/components/Layouts/Dashboard/Auth/LoginOntoSystem';
 import RegisterOntoSystem from '@/components/Layouts/Dashboard/Auth/RegisterOntoSystem';
-import LogoIcon from '@/components/Icons/LogoIcon';
 
 export type AuthStateType = `login` | `register`;
 
@@ -20,7 +19,7 @@ export default function Auth(/*{}: DashboardType*/) {
 
   return (
     <DivContainer className={`pl-5`}>
-      <MainHeading className={`flex items-center gap-2`}><LogoIcon />Telegram Chats</MainHeading>
+      <MainHeading>Telegram Chats</MainHeading>
       {authState === `login` && <LoginOntoSystem className={`mt-20`} setAuthState={setAuthState} />}
       {authState === `register` && <RegisterOntoSystem className={`mt-20`} setAuthState={setAuthState} />}
     </DivContainer>

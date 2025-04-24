@@ -1,11 +1,13 @@
 import Auth from '@/components/Pages/Home/Auth';
-import Content from '@/components/Pages/Home/Content';
+import InitialContent from '@/components/Pages/Home/InitialContent';
+import Navigation from '@/components/Pages/Home/Navigation';
 
 export default function Home() {
   return (
-    <main className={`main-grid-container px-8 h-screen justify-center items-center`}>
+    <main className={`main-grid-container pt-7 px-8`}>
+      <Navigation />
       <Auth />
-      <Content />
+      <InitialContent />
     </main>
   );
 }
