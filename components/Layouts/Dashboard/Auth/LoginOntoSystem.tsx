@@ -7,16 +7,17 @@ import TextNeutral from '@/components/Typography/Text/TextNeutral';
 import Button from '@/components/Buttons/Button';
 import TextGreen from '@/components/Typography/Text/TextGreen';
 import Input from '@/components/Inputs/Input';
+import { ComponentPropsWithoutRef } from 'react';
 
 type LoginOntoSystemType = {
   setAuthState: (state: AuthStateType) => void;
   // children: ReactNode;
-}
+} & ComponentPropsWithoutRef<'div'>;
 
-export default function LoginOntoSystem({ setAuthState }: LoginOntoSystemType) {
+export default function LoginOntoSystem({ className, setAuthState, ...props }: LoginOntoSystemType) {
   return (
     <>
-      <DivContainer className={`text-center flex flex-col items-center justify-center`}>
+      <DivContainer {...props} className={`text-center flex flex-col items-center justify-center ${className}`}>
         <LogoIcon className={`h-24 w-40 mb-8`} />
         <TextNeutral className={`mb-4`}>Log in Onto System</TextNeutral>
         <DivContainer className={`w-full flex flex-col gap-3 mb-14`}>

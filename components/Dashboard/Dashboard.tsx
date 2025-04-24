@@ -12,17 +12,20 @@ import { useState } from 'react';
 import ConnectToTelegram from '@/components/Layouts/Dashboard/Auth/ConnectToTelegram';
 import LoginOntoSystem from '@/components/Layouts/Dashboard/Auth/LoginOntoSystem';
 import RegisterOntoSystem from '@/components/Layouts/Dashboard/Auth/RegisterOntoSystem';
+import Chats from '@/components/Layouts/Dashboard/Chats';
 
-export type AuthStateType = `login` | `register` | `telegram`;
+export type AuthStateType = `login` | `register` | `telegram` | `telegram-authorized`;
 
 export default function Dashboard(/*{}: DashboardType*/) {
-  const [authState, setAuthState] = useState<AuthStateType>(`login`);
+  const [authState, setAuthState] = useState<AuthStateType>(`telegram-authorized`);
+
   return (
     <DivContainer className={`pl-5`}>
-      <MainHeading className={`mb-28`}>Telegram Chats</MainHeading>
-      {authState === `telegram` && <ConnectToTelegram />}
-      {authState === `login` && <LoginOntoSystem setAuthState={setAuthState} />}
-      {authState === `register` && <RegisterOntoSystem setAuthState={setAuthState} />}
+      <MainHeading className={``}>Telegram Chats</MainHeading>
+      {authState === `telegram` && <ConnectToTelegram className={`mt-24`} />}
+      {authState === `login` && <LoginOntoSystem className={`mt-24`} setAuthState={setAuthState} />}
+      {authState === `register` && <RegisterOntoSystem className={`mt-24`} setAuthState={setAuthState} />}
+      {authState === `telegram-authorized` && <Chats />}
     </DivContainer>
   );
 }
