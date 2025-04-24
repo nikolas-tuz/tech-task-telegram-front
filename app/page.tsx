@@ -4,7 +4,7 @@ import Content from '@/components/Content/Content';
 
 export default function Home() {
   return (
-    <main className={`main-grid-container`}>
+    <main className={`main-grid-container pt-7 px-8`}>
       <Navigation />
       <Dashboard />
       <Content />
