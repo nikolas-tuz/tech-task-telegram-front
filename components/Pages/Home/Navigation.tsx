@@ -21,7 +21,7 @@ type NavigationType = {
 
 export default function Navigation({ logoutFromTelegram, logoutFromApp, userImage }: NavigationType) {
   return (
-    <NavContainer className={`flex flex-col items-center min-h-lvh pb-14 justify-between`}>
+    <NavContainer className={`flex flex-col items-center min-h-lvh gap-14`}>
       <DivContainer>
         <DivContainer className={`mb-5`}>
           <LogoIcon className={`m-auto`} />

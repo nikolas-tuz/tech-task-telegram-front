@@ -14,6 +14,7 @@ import ConnectToTelegram from '@/components/Layouts/Dashboard/Auth/ConnectToTele
 import ChatsMessagesContainer from '@/components/Pages/Chats/ChatsMessagesContainer';
 import { useState } from 'react';
 import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
+import { logOut } from '@/utils/auth/logOut';
 
 export type TelegramChatsDataType = {
   message: string;
@@ -197,14 +198,10 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
       <main className={`main-grid-container pt-7 px-8`}>
         <Navigation
           logoutFromApp={{
-            active: !!telegramData, function: () => {
-              if (typeof window !== `undefined` && window.location) {
-                window.location.href = `/`;
-              }
-            }
+            active: true, function: () => logOut()
           }}
           logoutFromTelegram={{
-            active: telegramConnected, function: () => {
+            active: true, function: () => {
               setTelegramConnected(false);
             }
           }}

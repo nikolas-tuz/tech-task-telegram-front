@@ -10,6 +10,10 @@ import TextGreen from '@/components/Typography/Text/TextGreen';
 import { ComponentPropsWithoutRef, FormEvent, useState } from 'react';
 import { registerSchema } from '@/utils/schemas/register.schema';
 import ErrorMessage from '@/components/Layouts/Info/ErrorMessage';
+import axios from 'axios';
+import { logIn } from '@/utils/auth/logIn';
+import BackdropMUI from '@/components/Backdrop/BackdropMUI';
+import { ErrorResponseType } from '@/utils/types/errorResponse.type';
 
 type RegisterOntoSystemType = {
   setAuthState: (state: AuthStateType) => void;
@@ -17,9 +21,10 @@ type RegisterOntoSystemType = {
 } & ComponentPropsWithoutRef<'div'>;
 
 export default function RegisterOntoSystem({ className, setAuthState, ...props }: RegisterOntoSystemType) {
+  const [backdropState, setBackdropState] = useState(false);
   const [errorMessage, setErrorMessage] = useState(``);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const currObject = e.currentTarget;
     const formData = new FormData(currObject);
@@ -38,10 +43,28 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
       setErrorMessage(validate.error.errors[0].message);
       return;
     }
+    setBackdropState(true);
+
+    try {
+      const registerUser = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/register`, {
+        email: results.email,
+        password: results.password
+        // allow use of any es-lint
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }).then(res => res.data as any);
+
+      if (registerUser?.user?.email) {
+        logIn(registerUser.access_token);
+      }
+    } catch (e) {
+      setBackdropState(false);
+      setErrorMessage(`Operation failed. ${(e as ErrorResponseType).response?.data?.detail || `Please try again later.`}`);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <BackdropMUI openState={{ state: backdropState, setState: setBackdropState }} />
       <DivContainer {...props} className={`text-center flex flex-col items-center justify-center ${className}`}>
         <LogoIcon className={`h-24 w-40 mb-8`} />
         <TextNeutral className={`mb-4`}>Register Onto System</TextNeutral>

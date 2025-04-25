@@ -18,6 +18,7 @@ export default function RootLayout({
       className={`antialiased container m-auto`}
     >
     <DivContainer id={`snackbar-container`}></DivContainer>
+    <DivContainer id={`backdrop-container`}></DivContainer>
     {children}
     </body>
     </html>
