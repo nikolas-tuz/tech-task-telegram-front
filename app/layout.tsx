@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import DivContainer from '@/components/UI/DivContainer';
 
 export const metadata: Metadata = {
   title: 'Tech Task for Neuro Track: Telegram Chats',
@@ -16,6 +17,7 @@ export default function RootLayout({
     <body
       className={`antialiased container m-auto`}
     >
+    <DivContainer id={`snackbar-container`}></DivContainer>
     {children}
     </body>
     </html>
