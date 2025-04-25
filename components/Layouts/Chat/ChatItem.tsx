@@ -10,13 +10,25 @@ import { StringManipulation } from '@/utils/classes/StringManipulation.class';
 
 type ChatType = {
   active?: boolean;
-  lastMessage: string | undefined;
+  lastMessage: {
+    text: string;
+    media: boolean;
+  };
   name: string;
   // children: ReactNode;
 } & ComponentPropsWithoutRef<'div'>;
 
 export default function ChatItem({ active = false, name, lastMessage, className, ...props }: ChatType) {
   const stylesApplied = active ? `bg-zinc-200 ` : ``;
+  let defaultTextStr = ``;
+
+  if (lastMessage.text) {
+    defaultTextStr += new StringManipulation(lastMessage.text).trimText(20);
+  }
+  if (lastMessage.media) {
+    defaultTextStr += `(media)`;
+  }
+
   return (
     <>
       <DivContainer
@@ -27,7 +39,7 @@ export default function ChatItem({ active = false, name, lastMessage, className,
                alt={`Dummy User Image`} />
         <DivContainer className={`flex flex-col items-baseline`}>
           <TertiaryHeading className={`group-hover:text-[#27AE60]`}>{name}</TertiaryHeading>
-          <TextNeutral>{new StringManipulation(lastMessage || ``).trimText(30)}</TextNeutral>
+          <TextNeutral>{defaultTextStr}</TextNeutral>
         </DivContainer>
       </DivContainer>
     </>

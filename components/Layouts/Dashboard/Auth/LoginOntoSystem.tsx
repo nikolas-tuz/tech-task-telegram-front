@@ -47,7 +47,7 @@ export default function LoginOntoSystem({ className, setAuthState, ...props }: L
       }).then(res => res.data as any);
 
       if (loginUser?.user?.email) {
-        logIn(loginUser.access_token);
+        logIn(loginUser.access_token, loginUser.user.telegram_session);
       }
     } catch (e) {
       setBackdropState(false);

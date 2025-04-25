@@ -9,20 +9,25 @@ import MessagesContainer from '@/components/Layouts/Chat/Messages/MessagesContai
 import TextNeutral from '@/components/Typography/Text/TextNeutral';
 import MessageFromMe from '@/components/Layouts/Chat/Messages/MessageFromMe';
 import MessageToMe from '@/components/Layouts/Chat/Messages/MessageToMe';
+import LoadingScreen from '@/components/UI/LoadingScreen';
 
 type ChatsContainerType = {
   chat: ChatType | undefined;
+  loading: boolean;
   // children: ReactNode;
 }
 
-export default function ChatsMessagesContainer({ chat }: ChatsContainerType) {
+export default function ChatsMessagesContainer({ chat, loading }: ChatsContainerType) {
+
+
   return (
     <DivContainer>
-      {chat?.id === undefined && <DivContainer className={`flex items-center justify-center h-screen`}>
+      {!loading && chat?.id === undefined && <DivContainer className={`flex items-center justify-center h-screen`}>
         <TextNeutral>Click to any chat to see the messages （〃｀ 3′〃）!</TextNeutral>
       </DivContainer>}
 
-      {/*<LoadingScreen spinnerSize={80} />*/}
+      {loading && <LoadingScreen spinnerSize={80} />}
+
       <DivContainer className={`pt-2 overflow-y-auto max-h-[90lvh]`}>
         <DivContainer className={`flex items-center gap-4 w-full border-b border-b-neutral-100 pb-2 fixed
           bg-white z-30 top-0 pt-4`}>
@@ -30,7 +35,7 @@ export default function ChatsMessagesContainer({ chat }: ChatsContainerType) {
           <SecondaryHeading className={`font-semibold`}>John Doe</SecondaryHeading>
         </DivContainer>
         <MessagesContainer className={`mt-16 pb-4`}>
-          {chat && chat.messages.length > 0 && chat.messages.map((message, index) => {
+          {!loading && chat && chat.messages.length > 0 && chat.messages.map((message, index) => {
             if (message.role === `me`)
               return <MessageFromMe key={index} time={message.time}>{message.message}</MessageFromMe>;
             else

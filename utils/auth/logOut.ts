@@ -5,5 +5,7 @@ export function logOut() {
     document.cookie = `access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     // Redirect to login page
     window.location.href = '/';
+
+    if (window.localStorage.getItem('telegram_session')) window.localStorage.removeItem('telegram_session');
   }
 }

@@ -15,6 +15,7 @@ import ChatsMessagesContainer from '@/components/Pages/Chats/ChatsMessagesContai
 import { useState } from 'react';
 import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
 import { logOut } from '@/utils/auth/logOut';
+import { useGetTelegramChats } from '@/hooks/useGetTelegramChats';
 
 export type TelegramChatsDataType = {
   message: string;
@@ -179,18 +180,17 @@ const dummyChatData: ChatType[] = [
 ];
 
 export default function ChatsPage(/*{}: ChatsPageType*/) {
-  // allow unused vars in eslint
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [telegramData, setTelegramData] = useState<ChatType[] | undefined>(dummyChatData);
-  const [telegramConnected, setTelegramConnected] = useState(false);
   const [activeChat, setActiveChat] = useState<ChatType>();
+  const limit = 10;
+  const [skipChats, setSkipChats] = useState(0);
+
+  const { data, loading, error, telegramConnected } = useGetTelegramChats(limit, skipChats);
 
   function handleOnSelectChat(id: number) {
     setActiveChat(dummyChatData.find((chat) => chat.id === id));
   }
 
   function onTelegramConnect() {
-    setTelegramConnected(true);
   }
 
   return (
@@ -201,21 +201,21 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
             active: true, function: () => logOut()
           }}
           logoutFromTelegram={{
-            active: true, function: () => {
-              setTelegramConnected(false);
+            active: telegramConnected, function: () => {
             }
           }}
           userImage={UserImg.src} />
-        {!telegramConnected ?
+
+        {(!loading && !telegramConnected) ?
           <DivContainer className={`pl-5 h-screen flex items-center justify-center`}>
             <ConnectToTelegram onTelegramConnect={onTelegramConnect} />
           </DivContainer> : (
             <>
-              <Chats activeChatId={activeChat?.id} onSelectChat={handleOnSelectChat} chats={telegramData} />
+              <Chats loading={loading} activeChatId={activeChat?.id} onSelectChat={handleOnSelectChat} chats={data} />
             </>
           )
         }
-        <ChatsMessagesContainer chat={activeChat} />
+        <ChatsMessagesContainer loading={loading} chat={activeChat} />
       </main>
     </>
   );
