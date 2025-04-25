@@ -18,7 +18,7 @@ export default function Chats({ chats, activeChatId, onSelectChat }: ChatInterfa
     <>
       <DivContainer className={`text-center flex flex-col mt-8 gap-4 overflow-y-auto max-h-[80lvh]`}>
         {/*<LoadingScreen spinnerSize={60} />*/}
-        {chats.map((chat, index) =>
+        {chats?.map((chat, index) =>
           <ChatItem
             active={activeChatId === chat.id}
             onClick={() => onSelectChat(chat.id)}

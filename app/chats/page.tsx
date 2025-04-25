@@ -178,6 +178,8 @@ const dummyChatData: ChatType[] = [
 ];
 
 export default function ChatsPage(/*{}: ChatsPageType*/) {
+  // allow unused vars in eslint
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [telegramData, setTelegramData] = useState<ChatType[] | undefined>(dummyChatData);
   const [telegramConnected, setTelegramConnected] = useState(false);
   const [activeChat, setActiveChat] = useState<ChatType>();
