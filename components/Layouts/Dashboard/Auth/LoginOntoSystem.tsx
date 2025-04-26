@@ -70,9 +70,10 @@ export default function LoginOntoSystem({ className, setAuthState, ...props }: L
 
         <DivContainer className={`w-full flex flex-col gap-3 mb-14`}>
           <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`} type={`email`}
-                 placeholder={`Email`} />
-          <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`} type={`password`}
-                 placeholder={`Password`} />
+                 placeholder={`Email`} className={`w-full`} />
+          <Input password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`}
+                 type={`password`}
+                 placeholder={`Password`} className={`w-full`} />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DivContainer>
 

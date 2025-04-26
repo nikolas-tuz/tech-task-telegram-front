@@ -14,6 +14,7 @@ import axios from 'axios';
 import { logIn } from '@/utils/auth/logIn';
 import BackdropMUI from '@/components/Backdrop/BackdropMUI';
 import { ErrorResponseType } from '@/utils/types/errorResponse.type';
+import { getTelegramSession } from '@/utils/auth/getTelegramSession';
 
 type RegisterOntoSystemType = {
   setAuthState: (state: AuthStateType) => void;
@@ -54,7 +55,7 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
       }).then(res => res.data as any);
 
       if (registerUser?.user?.email) {
-        logIn(registerUser.access_token);
+        logIn(registerUser.access_token, getTelegramSession());
       }
     } catch (e) {
       setBackdropState(false);
@@ -70,11 +71,12 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
         <TextNeutral className={`mb-4`}>Register Onto System</TextNeutral>
         <DivContainer className={`w-full flex flex-col gap-3 mb-14`}>
           <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`} type={`email`}
-                 placeholder={`Email`} />
-          <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`} type={`password`}
-                 placeholder={`Password`} />
+                 placeholder={`Email`} className={`w-full`} />
+          <Input password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`}
+                 type={`password`}
+                 placeholder={`Password`} className={`w-full`} />
           <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`confirmPassword`} type={`password`}
-                 placeholder={`Confirm Password`} />
+                 placeholder={`Confirm Password`} className={`w-full`} />
 
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DivContainer>
