@@ -11,16 +11,13 @@ import MainHeading from '@/components/Typography/Heading/MainHeading';
 
 type ChatInterfaceType = {
   chats: DataType | null;
-  onSelectChat: (id: number, limit: number, skip: number) => Promise<void>;
+  onSelectChat: (id: number) => void;
   activeChatId?: number;
   loading: boolean;
   // children: ReactNode;
 }
 
-const messagesLimit = 20;
-
 export default function Chats({ chats, activeChatId, onSelectChat, loading }: ChatInterfaceType) {
-  const [skipMessages, setSkipMessages] = useState(0);
   const [triggerNextChatsFetch, setTriggerNextChatsFetch] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -55,7 +52,7 @@ export default function Chats({ chats, activeChatId, onSelectChat, loading }: Ch
         {!loading && chats && chats.chats.map((chat, index) =>
           <ChatItem
             active={activeChatId === chat.id}
-            onClick={() => onSelectChat(chat.id, messagesLimit, skipMessages)}
+            onClick={() => onSelectChat(chat.id)}
             key={index}
             lastMessage={chat.lastMessage}
             name={new StringManipulation(chat.name).trimText(30)}
