@@ -22,6 +22,7 @@ type RegisterOntoSystemType = {
 } & ComponentPropsWithoutRef<'div'>;
 
 export default function RegisterOntoSystem({ className, setAuthState, ...props }: RegisterOntoSystemType) {
+  const [loading, setLoading] = useState(false);
   const [backdropState, setBackdropState] = useState(false);
   const [errorMessage, setErrorMessage] = useState(``);
 
@@ -45,6 +46,7 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
       return;
     }
     setBackdropState(true);
+    setLoading(true);
 
     try {
       const registerUser = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/register`, {
@@ -60,6 +62,8 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
     } catch (e) {
       setBackdropState(false);
       setErrorMessage(`Operation failed. ${(e as ErrorResponseType).response?.data?.detail || `Please try again later.`}`);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -70,20 +74,24 @@ export default function RegisterOntoSystem({ className, setAuthState, ...props }
         <LogoIcon className={`h-24 w-40 mb-8`} />
         <TextNeutral className={`mb-4`}>Register Onto System</TextNeutral>
         <DivContainer className={`w-full flex flex-col gap-3 mb-14`}>
-          <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`} type={`email`}
+          <Input disabled={loading} onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`}
+                 type={`email`}
                  placeholder={`Email`} className={`w-full`} />
-          <Input password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`}
+          <Input disabled={loading} password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage}
+                 name={`password`}
                  type={`password`}
                  placeholder={`Password`} className={`w-full`} />
-          <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`confirmPassword`} type={`password`}
+          <Input disabled={loading} onFocus={() => setErrorMessage(``)} invalid={!!errorMessage}
+                 name={`confirmPassword`} type={`password`}
                  placeholder={`Confirm Password`} className={`w-full`} />
 
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DivContainer>
         <DivContainer className={`w-full flex flex-col gap-3`}>
-          <Button className={`w-full`}>Register</Button>
+          <Button disabled={loading} className={`w-full disabled:animate-pulse`}>Register</Button>
 
-          <button className={`cursor-pointer transition-all duration-200 hover:scale-105`}
+          <button disabled={loading}
+                  className={`cursor-pointer transition-all duration-200 hover:scale-105 disabled:animate-pulse`}
                   onClick={() => setAuthState(`login`)}>
             <TextGreen>Or Login</TextGreen>
           </button>
