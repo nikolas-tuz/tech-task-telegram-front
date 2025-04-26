@@ -4,8 +4,10 @@ import DivContainer from '@/components/UI/DivContainer';
 import ChatItem from '@/components/Layouts/Chat/ChatItem';
 import { DataType } from '@/hooks/useGetTelegramChats';
 import LoadingScreen from '@/components/UI/LoadingScreen';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StringManipulation } from '@/utils/classes/StringManipulation.class';
+import { IntersectionClass } from '@/utils/classes/Intersection.class';
+import MainHeading from '@/components/Typography/Heading/MainHeading';
 
 type ChatInterfaceType = {
   chats: DataType | null;
@@ -20,41 +22,34 @@ const messagesLimit = 20;
 export default function Chats({ chats, activeChatId, onSelectChat, loading }: ChatInterfaceType) {
   const [skipMessages, setSkipMessages] = useState(0);
   const [triggerNextChatsFetch, setTriggerNextChatsFetch] = useState(false);
-  useEffect(() => {
-    const target = document.getElementById('trigger-next-chats');
-    if (!target) {
-      console.error('Target element not found');
-      return;
-    }
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            console.log('Div is observed. Waiting for 5 seconds...');
-            setTimeout(() => {
-              console.log('5 seconds passed. Triggering action.');
-            }, 5000);
-          }
-        });
+  useEffect(() => {
+    const intersection = new IntersectionClass();
+    intersection.triggerWhenIntersected(
+      '#trigger-next-chats',
+      () => {
+        console.log('Fetching next chats...');
+        // Your fetch logic here
       },
-      {
-        root: null, // Use the viewport as the root
-        rootMargin: '0px', // No margin
-        threshold: 0 // Trigger as soon as any part is visible
-      }
+      { state: triggerNextChatsFetch, setState: setTriggerNextChatsFetch }
     );
 
-    observer.observe(target);
-
+    // Cleanup the observer on unmount
     return () => {
-      observer.disconnect();
+      if (observerRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observerRef.current.disconnect();
+      }
     };
-  }, []);
+  }, [triggerNextChatsFetch]);
 
   return (
     <>
-      <DivContainer className={`text-center flex flex-col mt-8 gap-4 overflow-y-auto max-h-[80lvh]`}>
+      <DivContainer className={`flex flex-col mt-8 gap-6 overflow-y-auto max-h-[80lvh]`}>
+        <DivContainer>
+          <MainHeading>Telegram Chats</MainHeading>
+        </DivContainer>
         {loading && <LoadingScreen spinnerSize={60} />}
 
         {!loading && chats && chats.chats.map((chat, index) =>

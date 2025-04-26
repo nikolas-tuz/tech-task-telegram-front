@@ -8,8 +8,8 @@ import UserImg from '@/public/stab-imgs/dummy-user.png';
 import MessagesContainer from '@/components/Layouts/Chat/Messages/MessagesContainer';
 import TextNeutral from '@/components/Typography/Text/TextNeutral';
 import LoadingScreen from '@/components/UI/LoadingScreen';
-import MessageToMe from '@/components/Layouts/Chat/Messages/MessageToMe';
 import { StringManipulation } from '@/utils/classes/StringManipulation.class';
+import Message from '@/components/Layouts/Chat/Messages/Message';
 
 type ChatsContainerType = {
   chat: MessagesType | null;
@@ -30,15 +30,13 @@ export default function ChatsMessagesContainer({ chat, loading }: ChatsContainer
         <DivContainer className={`flex items-center gap-4 w-full border-b border-b-neutral-100 pb-2 fixed
           bg-white z-30 top-0 pt-4`}>
           <UserImage className={`w-16 h-16`} userImage={UserImg.src} />
-          <SecondaryHeading className={`font-semibold`}>John Doe</SecondaryHeading>
+          <SecondaryHeading className={`font-semibold`}>{!loading ? chat?.chatName : (
+            <LoadingScreen hScreen={false} spinnerSize={30} />)}</SecondaryHeading>
         </DivContainer>
-        <MessagesContainer className={`mt-16 pb-4`}>
+        <MessagesContainer className={`mt-16 pb-4 overflow-x-hidden`}>
           {!loading && chat && chat.messages.length > 0 && chat.messages.map((message, index) => {
-            return <MessageToMe key={index} time={new StringManipulation(message.date).formatDate()}>{message.text}</MessageToMe>;
-            // if (message.role === `me`)
-            //   return <MessageFromMe key={index} time={message.time}>{message.message}</MessageFromMe>;
-            // else
-            //   return <MessageToMe key={index} time={message.time}>{message.message}</MessageToMe>;
+            return <Message isFromMe={false} className={`max-w-2xl`} key={index}
+                            time={new StringManipulation(message.date).formatDate()}>{message.text}</Message>;
           })}
           <DivContainer id={`last-message-div`}></DivContainer>
         </MessagesContainer>

@@ -4,8 +4,9 @@ import { Tooltip } from '@mui/material';
 import NavContainer from '@/components/UI/NavContainer';
 import LogoIcon from '@/components/Icons/LogoIcon';
 import DivContainer from '@/components/UI/DivContainer';
-import UserImage from '@/components/UI/UserImage';
 import LoginIcon from '@/components/Icons/LoginIcon';
+import ChatImg from '@/public/stab-imgs/dummy-user.png';
+import UserImage from '@/components/UI/UserImage';
 
 type LogoutType = {
   active: boolean;
@@ -19,15 +20,15 @@ type NavigationType = {
   // children: ReactNode;
 }
 
-export default function Navigation({ logoutFromTelegram, logoutFromApp, userImage }: NavigationType) {
+export default function Navigation({ logoutFromTelegram, logoutFromApp }: NavigationType) {
   return (
-    <NavContainer className={`flex flex-col items-center min-h-lvh gap-14`}>
+    <NavContainer className={`flex flex-col items-center min-h-lvh gap-14 pt-8`}>
       <DivContainer>
         <DivContainer className={`mb-5`}>
           <LogoIcon className={`m-auto`} />
         </DivContainer>
         <DivContainer>
-          <UserImage userImage={userImage} />
+          <UserImage userImage={ChatImg.src} />
         </DivContainer>
       </DivContainer>
       <DivContainer className={`flex flex-col gap-4`}>

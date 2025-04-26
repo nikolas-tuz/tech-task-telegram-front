@@ -26,7 +26,7 @@ export default function Input({ required = true, invalid, type, password, classN
       )}
 
       {password && passwordSeen && (
-        <SmallBadge mode={`green`} onClick={() => setPasswordSeen(false)}>Hide</SmallBadge>
+        <SmallBadge mode={`red`} onClick={() => setPasswordSeen(false)}>Hide</SmallBadge>
       )}
     </DivContainer>
   );

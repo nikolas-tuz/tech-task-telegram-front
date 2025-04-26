@@ -5,9 +5,7 @@ export class IntersectionClass {
     identifier: string,
     func: () => void,
     triggerActionAvailability: { state: boolean; setState: Dispatch<SetStateAction<boolean>> },
-    timeOut: number = 5_000
   ) {
-
     const target = document.querySelector(identifier);
     if (!target) {
       console.error('Target element not found');
@@ -21,10 +19,6 @@ export class IntersectionClass {
             console.log('Div is observed. Waiting for 5 seconds...');
             if (triggerActionAvailability.state) func();
             triggerActionAvailability.setState(false);
-
-            setTimeout(() => {
-              triggerActionAvailability.setState(true);
-            }, timeOut);
           }
         });
       },
@@ -37,9 +31,9 @@ export class IntersectionClass {
 
     observer.observe(target);
 
+    // Return a cleanup function to disconnect the observer
     return () => {
       observer.disconnect();
     };
   }
-
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import UserImg from '@/public/stab-imgs/dummy-user.png';
+import ChatImg from '@/public/stab-imgs/dummy-user.png';
 
 /*
 type ChatsPageType = {
@@ -23,6 +23,7 @@ import { ErrorResponseType } from '@/utils/types/errorResponse.type';
 
 export type MessagesType = {
   chatId: number;
+  chatName: string;
   message: string;
   messages: { id: number; text: string; date: string }[]
 }
@@ -81,7 +82,6 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   return (
     <>
       <main className={`main-grid-container pt-7 px-8`}>
-        <SnackbarMUI severity={`error`} message={errorMessage} openSnackbar={!!errorMessage} />
         <Navigation
           logoutFromApp={{
             active: true, function: () => logOut()
@@ -90,7 +90,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
             active: telegramConnected, function: () => {
             }
           }}
-          userImage={UserImg.src} />
+          userImage={ChatImg.src} />
 
         {(!loading && !telegramConnected) ?
           <DivContainer className={`pl-5 h-screen flex items-center justify-center`}>
@@ -104,6 +104,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
         }
         <ChatsMessagesContainer loading={loading || loadingChatMessages} chat={activeChat} />
       </main>
+      <SnackbarMUI severity={`error`} message={errorMessage} openSnackbar={!!errorMessage} />
     </>
   );
 }
