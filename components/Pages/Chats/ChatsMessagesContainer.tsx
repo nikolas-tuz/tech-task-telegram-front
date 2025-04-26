@@ -1,18 +1,17 @@
 'use client';
 
-import { ChatType } from '@/app/chats/page';
+import { MessagesType } from '@/app/chats/page';
 import DivContainer from '@/components/UI/DivContainer';
 import UserImage from '@/components/UI/UserImage';
 import SecondaryHeading from '@/components/Typography/Heading/SecondaryHeading';
 import UserImg from '@/public/stab-imgs/dummy-user.png';
 import MessagesContainer from '@/components/Layouts/Chat/Messages/MessagesContainer';
 import TextNeutral from '@/components/Typography/Text/TextNeutral';
-import MessageFromMe from '@/components/Layouts/Chat/Messages/MessageFromMe';
-import MessageToMe from '@/components/Layouts/Chat/Messages/MessageToMe';
 import LoadingScreen from '@/components/UI/LoadingScreen';
+import MessageToMe from '@/components/Layouts/Chat/Messages/MessageToMe';
 
 type ChatsContainerType = {
-  chat: ChatType | undefined;
+  chat: MessagesType | null;
   loading: boolean;
   // children: ReactNode;
 }
@@ -20,7 +19,7 @@ type ChatsContainerType = {
 export default function ChatsMessagesContainer({ chat, loading }: ChatsContainerType) {
   return (
     <DivContainer>
-      {!loading && chat?.id === undefined && <DivContainer className={`flex items-center justify-center h-screen`}>
+      {!loading && chat?.chatId === undefined && <DivContainer className={`flex items-center justify-center h-screen`}>
         <TextNeutral>Click to any chat to see the messages （〃｀ 3′〃）!</TextNeutral>
       </DivContainer>}
 
@@ -34,10 +33,11 @@ export default function ChatsMessagesContainer({ chat, loading }: ChatsContainer
         </DivContainer>
         <MessagesContainer className={`mt-16 pb-4`}>
           {!loading && chat && chat.messages.length > 0 && chat.messages.map((message, index) => {
-            if (message.role === `me`)
-              return <MessageFromMe key={index} time={message.time}>{message.message}</MessageFromMe>;
-            else
-              return <MessageToMe key={index} time={message.time}>{message.message}</MessageToMe>;
+            return <MessageToMe key={index} time={message.date}>{message.text}</MessageToMe>;
+            // if (message.role === `me`)
+            //   return <MessageFromMe key={index} time={message.time}>{message.message}</MessageFromMe>;
+            // else
+            //   return <MessageToMe key={index} time={message.time}>{message.message}</MessageToMe>;
           })}
         </MessagesContainer>
       </DivContainer>
