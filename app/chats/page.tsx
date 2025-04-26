@@ -24,12 +24,10 @@ export type MessagesType = {
   messages: { id: number; text: string; date: string }[]
 }
 
-const chatsLimit = 10;
+const chatsLimit = 140;
 
 export default function ChatsPage(/*{}: ChatsPageType*/) {
-  const [skipChats, setSkipChats] = useState(0);
-  const { data, loading, error, telegramConnected } = useGetTelegramChats(chatsLimit, skipChats);
-
+  const { data, loading, error, telegramConnected } = useGetTelegramChats(chatsLimit);
   const [activeChatId, setActiveChatId] = useState<number | undefined>(undefined);
 
   async function handleOnSelectChat(id: number) {

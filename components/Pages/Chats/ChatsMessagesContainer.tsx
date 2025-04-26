@@ -23,7 +23,7 @@ type ChatsContainerType = {
 }
 
 
-const messagesLimit = 20;
+const messagesLimit = 140;
 
 export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsContainerType) {
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
@@ -32,6 +32,7 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
   const [chatMessages, setChatMessages] = useState<MessagesType>();
   const [shouldScroll, setShouldScroll] = useState(false);
   const [errorMessage, setErrorMessage] = useState(``);
+
 
   useEffect(() => {
     if (shouldScroll) {

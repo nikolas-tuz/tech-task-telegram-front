@@ -4,9 +4,7 @@ import DivContainer from '@/components/UI/DivContainer';
 import ChatItem from '@/components/Layouts/Chat/ChatItem';
 import { DataType } from '@/hooks/useGetTelegramChats';
 import LoadingScreen from '@/components/UI/LoadingScreen';
-import { useEffect, useRef, useState } from 'react';
 import { StringManipulation } from '@/utils/classes/StringManipulation.class';
-import { IntersectionClass } from '@/utils/classes/Intersection.class';
 import MainHeading from '@/components/Typography/Heading/MainHeading';
 
 type ChatInterfaceType = {
@@ -18,29 +16,6 @@ type ChatInterfaceType = {
 }
 
 export default function Chats({ chats, activeChatId, onSelectChat, loading }: ChatInterfaceType) {
-  const [triggerNextChatsFetch, setTriggerNextChatsFetch] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    const intersection = new IntersectionClass();
-    intersection.triggerWhenIntersected(
-      '#trigger-next-chats',
-      () => {
-        console.log('Fetching next chats...');
-        // Your fetch logic here
-      },
-      { state: triggerNextChatsFetch, setState: setTriggerNextChatsFetch }
-    );
-
-    // Cleanup the observer on unmount
-    return () => {
-      if (observerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        observerRef.current.disconnect();
-      }
-    };
-  }, [triggerNextChatsFetch]);
-
   return (
     <>
       <DivContainer className={`flex flex-col mt-8 gap-6 overflow-y-auto max-h-[80lvh]`}>

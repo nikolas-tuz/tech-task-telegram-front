@@ -6,7 +6,6 @@ import { getTelegramSession } from '@/utils/auth/getTelegramSession';
 export type DataType = {
   message: string;
   chats: { name: string; id: number, lastMessage: { text: string; media: boolean }; }[]
-  total: number;
 }
 
 export type useGetTelegramChatsType = {
@@ -17,8 +16,7 @@ export type useGetTelegramChatsType = {
 };
 
 export function useGetTelegramChats(
-  limit: number,
-  skip: number
+  limit: number
 ): useGetTelegramChatsType {
   const telegramSession = getTelegramSession(),
     [data, setData] = useState<DataType | null>(null);
@@ -42,7 +40,7 @@ export function useGetTelegramChats(
       }
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats?limit=${limit}&skip=${skip}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats?limit=${limit}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -62,7 +60,7 @@ export function useGetTelegramChats(
 
     fetchTelegramChats();
     console.log('data:', data);
-  }, [telegramSession, limit, skip]);
+  }, [telegramSession, limit]);
 
   return { data, loading, error, telegramConnected };
 }
