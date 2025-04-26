@@ -13,8 +13,8 @@ export default function Input({ required = true, invalid, className, ...props }:
   return (
     <>
       <input required={required} {...props} className={`${className} ${appliedStyles} px-6 py-3 rounded-full border 
-       text-lg transition-all duration-300
-      outline-none focus:bg-green-50`} />
+       text-lg transition-all duration-300 placeholder-inherit
+      outline-none focus:bg-green-50 active:bg-green-50 `} />
     </>
   );
 }

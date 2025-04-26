@@ -34,6 +34,13 @@ body {
     @apply grid gap-4
 }
 
+input:-webkit-autofill {
+    background-color: #27AE60 !important; /* Match your input's background */
+    color: #27AE60 !important; /* Set your desired text color */
+    -webkit-text-fill-color: #27AE60 !important; /* Ensures text color is applied */
+    border: 1px solid #27AE60 !important; /* Match your input's border */
+    transition: background-color 5000s ease-in-out 0s; /* Prevents flashing */
+}
 
 ::selection {
     @apply bg-[#27AE60] text-white
