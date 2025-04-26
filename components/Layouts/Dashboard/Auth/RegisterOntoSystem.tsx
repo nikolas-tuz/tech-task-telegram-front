@@ -14,7 +14,7 @@ import axios from 'axios';
 import { logIn } from '@/utils/auth/logIn';
 import BackdropMUI from '@/components/Backdrop/BackdropMUI';
 import { ErrorResponseType } from '@/utils/types/errorResponse.type';
-import { getTelegramSession } from '@/utils/auth/getTelegramSession';
+import { getTelegramSession } from '@/utils/auth/telegramSession/getTelegramSession';
 
 type RegisterOntoSystemType = {
   setAuthState: (state: AuthStateType) => void;

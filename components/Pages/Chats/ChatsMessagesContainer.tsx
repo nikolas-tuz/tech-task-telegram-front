@@ -15,6 +15,7 @@ import { getAccessToken } from '@/utils/auth/getAccessToken';
 import { ErrorResponseType } from '@/utils/types/errorResponse.type';
 import { useEffect, useState } from 'react';
 import { DocumentManipulation } from '@/utils/classes/DocumentManipulation.class';
+import SnackbarMUI from '@/components/UI/SnackbarMUI';
 
 type ChatsContainerType = {
   loading: boolean;
@@ -23,12 +24,10 @@ type ChatsContainerType = {
 }
 
 
-const messagesLimit = 140;
+const messagesLimit = 80;
 
 export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsContainerType) {
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
-  const [skipMessages, setSkipMessages] = useState(0);
-
   const [chatMessages, setChatMessages] = useState<MessagesType>();
   const [shouldScroll, setShouldScroll] = useState(false);
   const [errorMessage, setErrorMessage] = useState(``);
@@ -36,7 +35,7 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
 
   useEffect(() => {
     if (shouldScroll) {
-      new DocumentManipulation().scrollToElement(`#last-message-div`);
+      new DocumentManipulation().scrollToElement(`#last-message-div`, false);
       setShouldScroll(false); // Reset the scroll flag
     }
   }, [shouldScroll]);
@@ -49,7 +48,7 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
     async function fetchMessages() {
       try {
         const fetchChatMessages = await axios
-          .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats/${activeChatId}?limit=${messagesLimit}&skip=${skipMessages}`, {
+          .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats/${activeChatId}?limit=${messagesLimit}`, {
             headers: {
               Authorization: `Bearer ${getAccessToken()}`
             }
@@ -72,10 +71,13 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
     }
 
     fetchMessages().then();
-  }, [activeChatId, skipMessages]);
+  }, [activeChatId]);
 
   return (
     <DivContainer>
+      <SnackbarMUI openSnackbar={!!errorMessage} anchorPosition={{ horizontal: `center`, vertical: `bottom` }}
+                   severity={`error`}
+                   message={errorMessage} />
       {!loading && !loadingChatMessages && !chatMessages &&
         <DivContainer className={`flex items-center justify-center h-screen`}>
           <TextNeutral>Click to any chat to see the messages （〃｀ 3′〃）!</TextNeutral>
@@ -91,9 +93,14 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
           <DivContainer className={`flex items-center gap-4 w-full border-b border-b-neutral-100 pb-2 fixed
           bg-white z-30 top-0 pt-4`}>
             <UserImage className={`w-16 h-16`} userImage={UserImg.src} />
-            <SecondaryHeading className={`font-semibold`}>{chatMessages?.chatName}</SecondaryHeading>
+            <SecondaryHeading className={`font-semibold`}>ChatId({activeChatId})</SecondaryHeading>
           </DivContainer>
           <MessagesContainer className={`mt-16 pb-4 overflow-x-hidden`}>
+            {chatMessages?.messages.length === 0 &&
+              <DivContainer className={`text-center overflow-y-hidden flex items-center justify-center h-[70vh]`}>
+                <TextNeutral>No textual messages detected.</TextNeutral>
+              </DivContainer>
+            }
             {chatMessages && chatMessages.messages.length > 0 &&
               chatMessages.messages.map((message, index) => {
                 return <Message isFromMe={false} className={`max-w-2xl`} key={index}

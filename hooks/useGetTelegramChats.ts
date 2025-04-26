@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import { getAccessToken } from '@/utils/auth/getAccessToken';
-import { getTelegramSession } from '@/utils/auth/getTelegramSession';
+import { getTelegramSession } from '@/utils/auth/telegramSession/getTelegramSession';
 
 export type DataType = {
   message: string;
@@ -13,6 +13,7 @@ export type useGetTelegramChatsType = {
   loading: boolean;
   error: string | null;
   telegramConnected: boolean;
+  setTelegramConnected: Dispatch<SetStateAction<boolean>>;
 };
 
 export function useGetTelegramChats(
@@ -50,8 +51,8 @@ export function useGetTelegramChats(
         setData(response as DataType);
         setError(null);
         setTelegramConnected(true);
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch Telegram chats');
+      } catch (err) {
+        setError('Failed to fetch Telegram chats.');
         setData(null);
       } finally {
         setLoading(false);
@@ -60,7 +61,7 @@ export function useGetTelegramChats(
 
     fetchTelegramChats();
     console.log('data:', data);
-  }, [telegramSession, limit]);
+  }, [telegramSession, limit, telegramConnected]);
 
-  return { data, loading, error, telegramConnected };
+  return { data, loading, error, telegramConnected, setTelegramConnected };
 }

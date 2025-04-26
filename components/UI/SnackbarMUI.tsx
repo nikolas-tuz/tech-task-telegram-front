@@ -10,6 +10,7 @@ type SnackbarMUIType = {
   severity: SnackbarMUISeverity;
   openSnackbar: boolean;
   message: string;
+  anchorPosition?: { horizontal: `left` | `center` | `right`, vertical: `top` | `bottom` }
   autoHideDurationInMSecs?: number;
 };
 
@@ -18,7 +19,8 @@ export default function
                 severity,
                 openSnackbar,
                 message,
-                autoHideDurationInMSecs = 5000
+                autoHideDurationInMSecs = 5000,
+                anchorPosition = { horizontal: `left`, vertical: `bottom` }
               }: SnackbarMUIType) {
   const [open, setOpen] = useState(openSnackbar);
   const [container, setContainer] = useState<HTMLElement | null>(null);
@@ -36,7 +38,8 @@ export default function
   if (!container) return null;
 
   return createPortal(
-    <Snackbar open={open} autoHideDuration={autoHideDurationInMSecs} onClose={() => setOpen(false)}>
+    <Snackbar anchorOrigin={anchorPosition} open={open} autoHideDuration={autoHideDurationInMSecs}
+              onClose={() => setOpen(false)}>
       <Alert
         onClose={() => setOpen(false)}
         severity={severity}

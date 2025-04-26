@@ -22,11 +22,13 @@ export default function Input({ required = true, invalid, type, password, classN
              required={required} {...props} className={`${className} ${appliedStyles} px-6 py-3 rounded-full border text-lg transition-all duration-300 placeholder-inherit
       outline-none focus:bg-green-50 active:bg-green-50 `} />
       {password && !passwordSeen && (
-        <SmallBadge mode={`green`} onClick={() => setPasswordSeen(true)}>See</SmallBadge>
+        <SmallBadge className={`absolute top-1/2 -translate-y-1/2 right-4 `} mode={`green`}
+                    onClick={() => setPasswordSeen(true)}>See</SmallBadge>
       )}
 
       {password && passwordSeen && (
-        <SmallBadge mode={`red`} onClick={() => setPasswordSeen(false)}>Hide</SmallBadge>
+        <SmallBadge className={`absolute top-1/2 -translate-y-1/2 right-4 `} mode={`red`}
+                    onClick={() => setPasswordSeen(false)}>Hide</SmallBadge>
       )}
     </DivContainer>
   );

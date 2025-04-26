@@ -16,6 +16,11 @@ import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
 import { logOut } from '@/utils/auth/logOut';
 import { useGetTelegramChats } from '@/hooks/useGetTelegramChats';
 import SnackbarMUI from '@/components/UI/SnackbarMUI';
+import TelegramConnectionModal from '@/components/Modals/TelegramConnectionModal';
+import { removeTelegramSession } from '@/utils/auth/telegramSession/removeTelegramSession';
+import { getAccessToken } from '@/utils/auth/getAccessToken';
+import { ErrorResponseType } from '@/utils/types/errorResponse.type';
+import axios from 'axios';
 
 export type MessagesType = {
   chatId: number;
@@ -27,14 +32,36 @@ export type MessagesType = {
 const chatsLimit = 140;
 
 export default function ChatsPage(/*{}: ChatsPageType*/) {
-  const { data, loading, error, telegramConnected } = useGetTelegramChats(chatsLimit);
+  const [telegramModalState, setTelegramModalState] = useState(false);
+
+  const { data, loading, error, telegramConnected, setTelegramConnected } = useGetTelegramChats(chatsLimit);
   const [activeChatId, setActiveChatId] = useState<number | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState(``);
 
   async function handleOnSelectChat(id: number) {
     setActiveChatId(id);
   }
 
   function onTelegramConnect() {
+    setTelegramModalState(true);
+  }
+
+  async function onTelegramLogout() {
+    try {
+      const telegramLogout = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/logout`, {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`
+        }
+      }).then(res => res.data as { status: string });
+
+      if (telegramLogout?.status === `success`) {
+        setTelegramConnected(false);
+        removeTelegramSession();
+        return;
+      }
+    } catch (e) {
+      setErrorMessage((e as ErrorResponseType).response.data.detail || `Failed to log user out from telegram.`);
+    }
   }
 
   return (
@@ -45,8 +72,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
             active: true, function: () => logOut()
           }}
           logoutFromTelegram={{
-            active: telegramConnected, function: () => {
-            }
+            active: telegramConnected, function: () => onTelegramLogout()
           }}
           userImage={ChatImg.src} />
 
@@ -60,6 +86,10 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
         }
         <ChatsMessagesContainer loading={loading} activeChatId={activeChatId} />
       </main>
+      <TelegramConnectionModal
+        setTelegramConnected={setTelegramConnected}
+        modalState={{ open: telegramModalState, setOpen: setTelegramModalState }} />
+
       <SnackbarMUI severity={`error`} message={error || `Failed to load chats. Please try again.`}
                    openSnackbar={!!error} />
     </>
