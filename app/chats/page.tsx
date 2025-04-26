@@ -11,12 +11,15 @@ import Navigation from '@/components/Pages/Home/Navigation';
 import DivContainer from '@/components/UI/DivContainer';
 import ConnectToTelegram from '@/components/Layouts/Dashboard/Auth/ConnectToTelegram';
 import ChatsMessagesContainer from '@/components/Pages/Chats/ChatsMessagesContainer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chats from '@/components/Layouts/Dashboard/Chats/Chats';
 import { logOut } from '@/utils/auth/logOut';
 import { useGetTelegramChats } from '@/hooks/useGetTelegramChats';
 import { getAccessToken } from '@/utils/auth/getAccessToken';
 import axios from 'axios';
+import { DocumentManipulation } from '@/utils/classes/DocumentManipulation.class';
+import SnackbarMUI from '@/components/UI/SnackbarMUI';
+import { ErrorResponseType } from '@/utils/types/errorResponse.type';
 
 export type MessagesType = {
   chatId: number;
@@ -24,29 +27,49 @@ export type MessagesType = {
   messages: { id: number; text: string; date: string }[]
 }
 
-const limit = 10;
+const chatsLimit = 10;
 
 export default function ChatsPage(/*{}: ChatsPageType*/) {
-  const [activeChat, setActiveChat] = useState<MessagesType | null>(null);
   const [skipChats, setSkipChats] = useState(0);
+  const { data, loading, error, telegramConnected } = useGetTelegramChats(chatsLimit, skipChats);
+  const [errorMessage, setErrorMessage] = useState(``);
+
+  const [activeChat, setActiveChat] = useState<MessagesType | null>(null);
+
   const [skipChatMessages, setSkipChatMessages] = useState(0);
-  const { data, loading, error, telegramConnected } = useGetTelegramChats(limit, skipChats);
 
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
 
-  async function handleOnSelectChat(id: number) {
-    setLoadingChatMessages(true);
-    try {
-      const fetchChatMessages = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats/${id}?limit=${limit}&skip=${skipChatMessages}`, {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`
-        }
-      }).then(res => res.data as MessagesType);
+  const [shouldScroll, setShouldScroll] = useState(false);
 
-      if (fetchChatMessages.chatId) {
-        setActiveChat(fetchChatMessages);
+  useEffect(() => {
+    if (shouldScroll) {
+      new DocumentManipulation().scrollToElement(`#last-message-div`);
+      setShouldScroll(false); // Reset the scroll flag
+    }
+  }, [shouldScroll]);
+
+  async function handleOnSelectChat(id: number, limit: number, skip: number) {
+    try {
+      setLoadingChatMessages(true);
+      const fetchChatMessages = await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/chats/${id}?limit=${limit}&skip=${skip}`, {
+          headers: {
+            Authorization: `Bearer ${getAccessToken()}`
+          }
+        })
+        .then((res) => res.data as MessagesType);
+
+      if (fetchChatMessages?.chatId) {
+        setActiveChat((prevState) => {
+          if (prevState) return { ...prevState, ...fetchChatMessages };
+          return fetchChatMessages;
+        });
+        setShouldScroll(true); // Trigger the scroll after state update
       }
     } catch (e) {
+      console.error(e);
+      setErrorMessage((e as ErrorResponseType).response.data.detail);
     } finally {
       setLoadingChatMessages(false);
     }
@@ -58,6 +81,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   return (
     <>
       <main className={`main-grid-container pt-7 px-8`}>
+        <SnackbarMUI severity={`error`} message={errorMessage} openSnackbar={!!errorMessage} />
         <Navigation
           logoutFromApp={{
             active: true, function: () => logOut()

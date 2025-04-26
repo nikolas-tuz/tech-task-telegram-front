@@ -9,13 +9,16 @@ import { StringManipulation } from '@/utils/classes/StringManipulation.class';
 
 type ChatInterfaceType = {
   chats: DataType | null;
-  onSelectChat: (id: number) => void;
+  onSelectChat: (id: number, limit: number, skip: number) => Promise<void>;
   activeChatId?: number;
   loading: boolean;
   // children: ReactNode;
 }
 
+const messagesLimit = 20;
+
 export default function Chats({ chats, activeChatId, onSelectChat, loading }: ChatInterfaceType) {
+  const [skipMessages, setSkipMessages] = useState(0);
   const [triggerNextChatsFetch, setTriggerNextChatsFetch] = useState(false);
   useEffect(() => {
     const target = document.getElementById('trigger-next-chats');
@@ -57,7 +60,7 @@ export default function Chats({ chats, activeChatId, onSelectChat, loading }: Ch
         {!loading && chats && chats.chats.map((chat, index) =>
           <ChatItem
             active={activeChatId === chat.id}
-            onClick={() => onSelectChat(chat.id)}
+            onClick={() => onSelectChat(chat.id, messagesLimit, skipMessages)}
             key={index}
             lastMessage={chat.lastMessage}
             name={new StringManipulation(chat.name).trimText(30)}

@@ -9,6 +9,7 @@ import MessagesContainer from '@/components/Layouts/Chat/Messages/MessagesContai
 import TextNeutral from '@/components/Typography/Text/TextNeutral';
 import LoadingScreen from '@/components/UI/LoadingScreen';
 import MessageToMe from '@/components/Layouts/Chat/Messages/MessageToMe';
+import { StringManipulation } from '@/utils/classes/StringManipulation.class';
 
 type ChatsContainerType = {
   chat: MessagesType | null;
@@ -33,12 +34,13 @@ export default function ChatsMessagesContainer({ chat, loading }: ChatsContainer
         </DivContainer>
         <MessagesContainer className={`mt-16 pb-4`}>
           {!loading && chat && chat.messages.length > 0 && chat.messages.map((message, index) => {
-            return <MessageToMe key={index} time={message.date}>{message.text}</MessageToMe>;
+            return <MessageToMe key={index} time={new StringManipulation(message.date).formatDate()}>{message.text}</MessageToMe>;
             // if (message.role === `me`)
             //   return <MessageFromMe key={index} time={message.time}>{message.message}</MessageFromMe>;
             // else
             //   return <MessageToMe key={index} time={message.time}>{message.message}</MessageToMe>;
           })}
+          <DivContainer id={`last-message-div`}></DivContainer>
         </MessagesContainer>
       </DivContainer>
     </DivContainer>
