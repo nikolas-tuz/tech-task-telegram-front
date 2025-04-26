@@ -18,8 +18,6 @@ type ChatsContainerType = {
 }
 
 export default function ChatsMessagesContainer({ chat, loading }: ChatsContainerType) {
-
-
   return (
     <DivContainer>
       {!loading && chat?.id === undefined && <DivContainer className={`flex items-center justify-center h-screen`}>

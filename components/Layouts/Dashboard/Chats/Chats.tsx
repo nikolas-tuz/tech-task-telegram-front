@@ -5,6 +5,7 @@ import ChatItem from '@/components/Layouts/Chat/ChatItem';
 import { DataType } from '@/hooks/useGetTelegramChats';
 import LoadingScreen from '@/components/UI/LoadingScreen';
 import { useEffect, useState } from 'react';
+import { StringManipulation } from '@/utils/classes/StringManipulation.class';
 
 type ChatInterfaceType = {
   chats: DataType | null;
@@ -59,7 +60,7 @@ export default function Chats({ chats, activeChatId, onSelectChat, loading }: Ch
             onClick={() => onSelectChat(chat.id)}
             key={index}
             lastMessage={chat.lastMessage}
-            name={chat.name}
+            name={new StringManipulation(chat.name).trimText(30)}
           />
         )}
         <DivContainer id={`trigger-next-chats`}></DivContainer>
