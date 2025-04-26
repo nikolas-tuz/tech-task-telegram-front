@@ -60,7 +60,6 @@ export function useGetTelegramChats(
     };
 
     fetchTelegramChats();
-    console.log('data:', data);
   }, [telegramSession, limit, telegramConnected]);
 
   return { data, loading, error, telegramConnected, setTelegramConnected };

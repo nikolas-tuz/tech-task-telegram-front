@@ -16,7 +16,6 @@ export class IntersectionClass {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            console.log('Div is observed. Waiting for 5 seconds...');
             if (triggerActionAvailability.state) func();
             triggerActionAvailability.setState(false);
           }
