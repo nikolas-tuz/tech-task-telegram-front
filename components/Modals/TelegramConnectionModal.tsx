@@ -174,7 +174,7 @@ export default function TelegramConnectionModal({ modalState, setTelegramConnect
               <TextNeutral className={`text-sm text-neutral-500`}>
                 You will receive a code on your Telegram account to verify your identity.
               </TextNeutral>
-              {errorMessage && <ErrorMessage className={`max-w-lg`}>{errorMessage}</ErrorMessage>}
+              {errorMessage && <ErrorMessage className={`max-w-xl`}>{errorMessage}</ErrorMessage>}
             </DivContainer>
             <DivContainer className={`w-full flex flex-col gap-3`}>
 
@@ -203,7 +203,7 @@ export default function TelegramConnectionModal({ modalState, setTelegramConnect
                 If you have 2FA enabled, please enter your password in a corresponding field. Without it
                 the authentication fails.
               </TextNeutral>
-              {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+              {errorMessage && <ErrorMessage className={`max-w-xl`}>{errorMessage}</ErrorMessage>}
             </DivContainer>
             <DivContainer className={`w-full flex flex-col gap-3`}>
               <Button disabled={loading} className={`w-full min-h-[77px]`}>

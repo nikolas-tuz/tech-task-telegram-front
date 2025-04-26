@@ -21,6 +21,7 @@ type LoginOntoSystemType = {
 } & ComponentPropsWithoutRef<'div'>;
 
 export default function LoginOntoSystem({ className, setAuthState, ...props }: LoginOntoSystemType) {
+  const [loading, setLoading] = useState(false);
   const [backdropState, setBackdropState] = useState(false);
   const [errorMessage, setErrorMessage] = useState(``);
 
@@ -37,6 +38,7 @@ export default function LoginOntoSystem({ className, setAuthState, ...props }: L
       return;
     }
     setBackdropState(true);
+    setLoading(true);
 
     try {
       const loginUser = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/login`, {
@@ -52,6 +54,8 @@ export default function LoginOntoSystem({ className, setAuthState, ...props }: L
     } catch (e) {
       setBackdropState(false);
       setErrorMessage(`Operation failed. ${(e as ErrorResponseType).response?.data?.detail || `Please try again later.`}`);
+    } finally {
+      setLoading(false);
     }
 
   }
@@ -69,19 +73,19 @@ export default function LoginOntoSystem({ className, setAuthState, ...props }: L
         <TextNeutral className={`mb-4`}>Log in Onto System</TextNeutral>
 
         <DivContainer className={`w-full flex flex-col gap-3 mb-14`}>
-          <Input onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`} type={`email`}
-                 placeholder={`Email`} className={`w-full`} />
-          <Input password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`password`}
+          <Input disabled={loading} onFocus={() => setErrorMessage(``)} invalid={!!errorMessage} name={`email`}
+                 type={`email`}
+                 placeholder={`Email`} className={`w-full disabled:animate-pulse`} />
+          <Input disabled={loading} password onFocus={() => setErrorMessage(``)} invalid={!!errorMessage}
+                 name={`password`}
                  type={`password`}
-                 placeholder={`Password`} className={`w-full`} />
+                 placeholder={`Password`} className={`w-full disabled:animate-pulse`} />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DivContainer>
 
         <DivContainer className={`w-full flex flex-col gap-3`}>
-          <Button className={`w-full`}>Log In</Button>
-
-
-          <button className={`cursor-pointer transition-all duration-200 hover:scale-105`}
+          <Button disabled={loading} className={`w-full disabled:animate-pulse`}>Log In</Button>
+          <button disabled={loading} className={`cursor-pointer transition-all duration-200 hover:scale-105`}
                   onClick={handleAuthState}>
             <TextGreen>Or Register</TextGreen>
           </button>
