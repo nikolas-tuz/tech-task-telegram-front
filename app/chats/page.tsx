@@ -21,6 +21,7 @@ import { removeTelegramSession } from '@/utils/auth/telegramSession/removeTelegr
 import { getAccessToken } from '@/utils/auth/getAccessToken';
 import { ErrorResponseType } from '@/utils/types/errorResponse.type';
 import axios from 'axios';
+import BackdropMUI from '@/components/Backdrop/BackdropMUI';
 
 export type MessagesType = {
   chatId: number;
@@ -35,6 +36,8 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   const [telegramModalState, setTelegramModalState] = useState(false);
 
   const { data, loading, error, telegramConnected, setTelegramConnected } = useGetTelegramChats(chatsLimit);
+  const [loggingOut, setLoggingOut] = useState(false);
+
   const [activeChatId, setActiveChatId] = useState<number | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState(``);
 
@@ -47,6 +50,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   }
 
   async function onTelegramLogout() {
+    setLoggingOut(true);
     try {
       const telegramLogout = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/logout`, {
         headers: {
@@ -61,15 +65,21 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
       }
     } catch (e) {
       setErrorMessage((e as ErrorResponseType).response.data.detail || `Failed to log user out from telegram.`);
+    } finally {
+      setLoggingOut(false);
     }
   }
 
   return (
     <>
+      <BackdropMUI openState={{ state: loggingOut, setState: setLoggingOut }} />
       <main className={`main-grid-container pt-7 px-8`}>
         <Navigation
           logoutFromApp={{
-            active: true, function: () => logOut()
+            active: true, function: () => {
+              setLoggingOut(true);
+              logOut();
+            }
           }}
           logoutFromTelegram={{
             active: telegramConnected, function: () => onTelegramLogout()
@@ -90,8 +100,8 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
         setTelegramConnected={setTelegramConnected}
         modalState={{ open: telegramModalState, setOpen: setTelegramModalState }} />
 
-      <SnackbarMUI severity={`error`} message={error || `Failed to load chats. Please try again.`}
-                   openSnackbar={!!error} />
+      <SnackbarMUI severity={`error`} message={error || errorMessage || `Failed to load chats. Please try again.`}
+                   openSnackbar={!!error || !!errorMessage} />
     </>
   );
 }

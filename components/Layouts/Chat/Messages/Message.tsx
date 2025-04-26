@@ -22,6 +22,7 @@ export default function Message({ time, img, isFromMe = true, className, ...prop
     <>
       {img && (
         <DivContainer className="relative rounded-2xl h-80 w-80">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="object-cover absolute" src={img.src || './stab-imgs/img-message.png'} alt="Media Image" />
         </DivContainer>
       )}
