@@ -20,13 +20,14 @@ import SnackbarMUI from '@/components/UI/SnackbarMUI';
 type ChatsContainerType = {
   loading: boolean;
   activeChatId?: number;
+  loggingOut: boolean;
   // children: ReactNode;
 }
 
 
 const messagesLimit = 80;
 
-export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsContainerType) {
+export default function ChatsMessagesContainer({ loading, activeChatId, loggingOut }: ChatsContainerType) {
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
   const [chatMessages, setChatMessages] = useState<MessagesType>();
   const [shouldScroll, setShouldScroll] = useState(false);
@@ -95,19 +96,28 @@ export default function ChatsMessagesContainer({ loading, activeChatId }: ChatsC
             <UserImage className={`w-16 h-16`} userImage={UserImg.src} />
             <SecondaryHeading className={`font-semibold`}>ChatId({activeChatId})</SecondaryHeading>
           </DivContainer>
-          <MessagesContainer className={`mt-16 pb-4 overflow-x-hidden`}>
-            {chatMessages?.messages.length === 0 &&
+          {loggingOut &&
+            <MessagesContainer className={`mt-16 pb-4 overflow-x-hidden`}>
               <DivContainer className={`text-center overflow-y-hidden flex items-center justify-center h-[70vh]`}>
-                <TextNeutral>No textual messages detected.</TextNeutral>
+                <TextNeutral>Logged out.</TextNeutral>
               </DivContainer>
-            }
-            {chatMessages && chatMessages.messages.length > 0 &&
-              chatMessages.messages.map((message, index) => {
-                return <Message isFromMe={false} className={`max-w-2xl`} key={index}
-                                time={new StringManipulation(message.date).formatDate()}>{message.text}</Message>;
-              })}
-            <DivContainer id={`last-message-div`}></DivContainer>
-          </MessagesContainer>
+            </MessagesContainer>
+          }
+          {!loggingOut &&
+            <MessagesContainer className={`mt-16 pb-4 overflow-x-hidden`}>
+              {chatMessages?.messages.length === 0 &&
+                <DivContainer className={`text-center overflow-y-hidden flex items-center justify-center h-[70vh]`}>
+                  <TextNeutral>No textual messages detected.</TextNeutral>
+                </DivContainer>
+              }
+              {chatMessages && chatMessages.messages.length > 0 &&
+                chatMessages.messages.map((message, index) => {
+                  return <Message isFromMe={false} className={`max-w-2xl`} key={index}
+                                  time={new StringManipulation(message.date).formatDate()}>{message.text}</Message>;
+                })}
+              <DivContainer id={`last-message-div`}></DivContainer>
+            </MessagesContainer>
+          }
         </DivContainer>
       }
     </DivContainer>

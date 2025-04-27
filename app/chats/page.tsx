@@ -50,7 +50,6 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   }
 
   async function onTelegramLogout() {
-    setLoggingOut(true);
     try {
       const telegramLogout = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/logout`, {
         headers: {
@@ -59,14 +58,13 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
       }).then(res => res.data as { status: string });
 
       if (telegramLogout?.status === `success`) {
+        setLoggingOut(true);
         setTelegramConnected(false);
         removeTelegramSession();
         return;
       }
     } catch (e) {
       setErrorMessage((e as ErrorResponseType).response.data.detail || `Failed to log user out from telegram.`);
-    } finally {
-      setLoggingOut(false);
     }
   }
 
@@ -94,7 +92,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
                    chats={data} />
           )
         }
-        <ChatsMessagesContainer loading={loading} activeChatId={activeChatId} />
+        <ChatsMessagesContainer loggingOut={loggingOut} loading={loading} activeChatId={activeChatId} />
       </main>
       <TelegramConnectionModal
         setTelegramConnected={setTelegramConnected}
