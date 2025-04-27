@@ -37,6 +37,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
 
   const { data, loading, error, telegramConnected, setTelegramConnected } = useGetTelegramChats(chatsLimit);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [loggedOutFromTelegram, setLoggedOutFromTelegram] = useState<boolean>(false);
 
   const [activeChatId, setActiveChatId] = useState<number | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState(``);
@@ -50,6 +51,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
   }
 
   async function onTelegramLogout() {
+    setLoggedOutFromTelegram(true);
     try {
       const telegramLogout = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/telegram/logout`, {
         headers: {
@@ -58,13 +60,13 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
       }).then(res => res.data as { status: string });
 
       if (telegramLogout?.status === `success`) {
-        setLoggingOut(true);
         setTelegramConnected(false);
         removeTelegramSession();
         return;
       }
     } catch (e) {
       setErrorMessage((e as ErrorResponseType).response.data.detail || `Failed to log user out from telegram.`);
+      setLoggedOutFromTelegram(false);
     }
   }
 
@@ -92,7 +94,7 @@ export default function ChatsPage(/*{}: ChatsPageType*/) {
                    chats={data} />
           )
         }
-        <ChatsMessagesContainer loggingOut={loggingOut} loading={loading} activeChatId={activeChatId} />
+        <ChatsMessagesContainer loggingOut={loggedOutFromTelegram} loading={loading} activeChatId={activeChatId} />
       </main>
       <TelegramConnectionModal
         setTelegramConnected={setTelegramConnected}
